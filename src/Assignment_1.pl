@@ -3,12 +3,12 @@
 players_in_team(Team, L):-
     players_Acc(Team, L, []), !.
 
-players_Acc(Team, [Player|Rest], Acc):-
+players_Acc(Team, L, Acc):-
     player(Player, Team, _),
     \+ member(Player, Acc),
-    players_Acc(Team, Rest, [Player|Acc]).
+    players_Acc(Team, L, [Player|Acc]).
 
-players_Acc(_, [], _).
+players_Acc(_, Acc, Acc).
 
 %-------------------------------------------------
 % Task 2
@@ -31,6 +31,21 @@ most_successful_team(Team) :-
 
 %-------------------------------------------------
 %Task 4
+matches_helper(Team,L,Acc):-
+    match(Team,Opponent,TeamScore,OpponentScore),
+    \+ member((Team,Opponent,TeamScore,OpponentScore),Acc),
+    matches_helper(Team,L,[(Team,Opponent,TeamScore,OpponentScore)|Acc]).
+
+matches_helper(Team, L, Acc):-
+    match(Opponent,Team,OpponentScore,TeamScore),
+    \+ member((Opponent,Team,OpponentScore,TeamScore),Acc),
+    matches_helper(Team,L,[(Opponent,Team,OpponentScore,TeamScore)|Acc]).
+
+matches_helper(Team, Acc, Acc).
+
+matches_of_team(Team,L):-
+    matches_helper(Team,L,[]), !.
+
 
 %-------------------------------------------------
 %Task 5
