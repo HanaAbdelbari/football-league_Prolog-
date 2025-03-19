@@ -2,7 +2,7 @@
 
 % Team(Name, Country, Num_of_winning_times)
 
-team(barcelona, spain, 5).
+team(barcelona, spain, 5).  
 team(real_madrid, spain, 6).  
 team(manchester_united, england, 3).  
 team(liverpool, england, 4).  
@@ -50,7 +50,7 @@ match(real_madrid, ajax, 4, 1).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% Goals Info %%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %Goals(Player, Num_of_scored_goals)
 
-    goals(messi, 10).
+goals(messi, 10).   
 goals(ronaldo, 12).   
 goals(pogba, 5).  
 goals(salah, 11).   

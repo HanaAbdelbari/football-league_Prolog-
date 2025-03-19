@@ -17,8 +17,31 @@ team_count_by_country(Country, Count) :-
     length(Teams, Count).
 %-------------------------------------------------
 %Task 3
-%-------------------------------------------------
+wins_helper(MaxWin,MaxTeam,Team):-
+  team(CurrTeam,_,Win),
+  Win>MaxWin,
+  wins_helper(Win,CurrTeam,Team).
 
+wins_helper(MaxWin,Team,Team):-
+    team(_,_,Win),
+    \+(Win>MaxWin).
+
+most_successful_team(Team) :-
+   wins_helper(0,none, Team), !.
+
+%-------------------------------------------------
+%Task 4
+
+%-------------------------------------------------
+%Task 5
+
+%-------------------------------------------------
+%Task 6
+
+%-------------------------------------------------
+%Task 7
+
+%-------------------------------------------------
 
 
 
