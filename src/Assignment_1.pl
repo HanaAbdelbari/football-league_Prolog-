@@ -58,12 +58,16 @@ matches_of_team(Team,L):-
 
 %-------------------------------------------------
 %Task 5
+% a predicate to count all matches a team has played
 num_matches_of_team(Team, N) :-
     findall(Match, (match(Team, _, _, _) ; match(_, Team, _, _)), Matches),
     length(Matches, N).
 %-------------------------------------------------
 %Task 6
-
+% a predicate to give the highest-scoring player
+top_scorer(Player) :-
+    goals(Player, Goals),
+    \+ (goals(_, OtherGoals), OtherGoals > Goals).
 %-------------------------------------------------
 %Task 7
 % If there is a tie, choose the position that appears first in the dataset.
