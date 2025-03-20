@@ -13,8 +13,17 @@ players_Acc(_, Acc, Acc).
 %-------------------------------------------------
 % Task 2
 team_count_by_country(Country, Count) :-
-    findall(Team, team(Team, Country, _), Teams),
-    length(Teams, Count).
+    gather_teams_by_country(Country, [], TeamList),
+    length(TeamList, Count),!.
+
+gather_teams_by_country(Country, Seen, FinalList) :-
+    team(Team, Country, _),
+    \+ member(Team, Seen),!,
+
+    gather_teams_by_country(Country, [Team | Seen], FinalList).
+
+gather_teams_by_country(_, Teams, Teams).
+
 %-------------------------------------------------
 %Task 3
 wins_helper(MaxWin,MaxTeam,Team):-
