@@ -58,7 +58,9 @@ matches_of_team(Team,L):-
 
 %-------------------------------------------------
 %Task 5
-
+num_matches_of_team(Team, N) :-
+    findall(Match, (match(Team, _, _, _) ; match(_, Team, _, _)), Matches),
+    length(Matches, N).
 %-------------------------------------------------
 %Task 6
 
