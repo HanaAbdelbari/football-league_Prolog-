@@ -55,7 +55,32 @@ matches_of_team(Team,L):-
 
 %-------------------------------------------------
 %Task 7
+% If there is a tie, choose the position that appears first in the dataset.
+most_common_position_in_team(Team, MostCommonPosition) :-
+    get_all_positions(Team, Positions),
+    count_positions(Positions, PositionCounts),
+    find_max_count(PositionCounts, MaxCount),
 
+    member((MostCommonPosition, MaxCount), PositionCounts).
+
+get_all_positions(Team, Positions) :-
+    findall(Position, player(_, Team, Position), Positions).
+
+count_positions([], []).
+count_positions([Position|Rest], PositionCounts) :-
+    count_positions(Rest, TempCounts),
+    (   select((Position, Count), TempCounts, NewTempCounts) ->
+        NewCount is Count + 1,
+        PositionCounts = [(Position, NewCount)|NewTempCounts]
+    ;   PositionCounts = [(Position, 1)|TempCounts]
+    ).
+
+find_max_count([(_, Count)], Count).
+find_max_count([(_, Count1), (_, Count2)|Rest], MaxCount) :-
+    (   Count1 >= Count2 ->
+        find_max_count([(_, Count1)|Rest], MaxCount)
+    ;   find_max_count([(_, Count2)|Rest], MaxCount)
+    ).
 %-------------------------------------------------
 
 
