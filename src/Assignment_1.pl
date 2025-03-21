@@ -14,15 +14,22 @@ players_Acc(_, Acc, Acc).
 % Task 2
 team_count_by_country(Country, Count) :-
     gather_teams_by_country(Country, [], TeamList),
-    length(TeamList, Count),!.
+    custom_length(TeamList, Count), !.
 
 gather_teams_by_country(Country, Seen, FinalList) :-
     team(Team, Country, _),
-    \+ member(Team, Seen),!,
-
+    \+ custom_member(Team, Seen), !,
     gather_teams_by_country(Country, [Team | Seen], FinalList).
 
 gather_teams_by_country(_, Teams, Teams).
+custom_length([], 0).
+custom_length([_|Tail], Length) :-
+    custom_length(Tail, TailLength),
+    Length is TailLength + 1.
+
+custom_member(Element, [Element|_]).
+custom_member(Element, [_|Tail]) :-
+    custom_member(Element, Tail).
 
 %-------------------------------------------------
 %Task 3
