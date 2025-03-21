@@ -64,32 +64,52 @@ matches_of_team(Team,L):-
 
 %-------------------------------------------------
 %Task 7
-% If there is a tie, choose the position that appears first in the dataset.
-most_common_position_in_team(Team, MostCommonPosition) :-
-    get_all_positions(Team, Positions),
-    count_positions(Positions, PositionCounts),
-    find_max_count(PositionCounts, MaxCount),
+% Task 7: Find the most common position in a specific team
+most_common_position_in_team(Team, Pos) :-
+    extract_positions(Team, RoleList),
+    tally_roles(RoleList, RoleCounts),
+    highest_count(RoleCounts, MaxOccurrence),
+    first_role_with_max(RoleCounts, MaxOccurrence, Pos).
 
-    member((MostCommonPosition, MaxCount), PositionCounts).
+extract_positions(Team, Roles) :-
+    player(_, Team, Role),
+    gather_positions(Team, [Role], Roles).
 
-get_all_positions(Team, Positions) :-
-    findall(Position, player(_, Team, Position), Positions).
+gather_positions(Team, Collected, Roles) :-
+    player(_, Team, Role),
+    not_in_list(Role, Collected),
+    gather_positions(Team, [Role|Collected], Roles).
+gather_positions(_, Roles, Roles).
 
-count_positions([], []).
-count_positions([Position|Rest], PositionCounts) :-
-    count_positions(Rest, TempCounts),
-    (   select((Position, Count), TempCounts, NewTempCounts) ->
-        NewCount is Count + 1,
-        PositionCounts = [(Position, NewCount)|NewTempCounts]
-    ;   PositionCounts = [(Position, 1)|TempCounts]
+not_in_list(_, []).
+not_in_list(X, [Y|T]) :-
+    X \== Y,
+    not_in_list(X, T).
+
+tally_roles([], []).
+tally_roles([Role|Rest], RoleCounts) :-
+    tally_roles(Rest, TempCounts),
+    update_count(Role, TempCounts, RoleCounts).
+
+update_count(Role, [], [(Role, 1)]).
+update_count(Role, [(Role, Count)|Tail], [(Role, NewCount)|Tail]) :-
+    NewCount is Count + 1.
+update_count(Role, [(OtherRole, Count)|Tail], [(OtherRole, Count)|NewTail]) :-
+    Role \== OtherRole,
+    update_count(Role, Tail, NewTail).
+
+highest_count([(_, Count)], Count).
+highest_count([(_, C1), (_, C2)|Rest], MaxCount) :-
+    (   C1 >= C2 ->
+        highest_count([(_, C1)|Rest], MaxCount)
+    ;   highest_count([(_, C2)|Rest], MaxCount)
     ).
 
-find_max_count([(_, Count)], Count).
-find_max_count([(_, Count1), (_, Count2)|Rest], MaxCount) :-
-    (   Count1 >= Count2 ->
-        find_max_count([(_, Count1)|Rest], MaxCount)
-    ;   find_max_count([(_, Count2)|Rest], MaxCount)
-    ).
+first_role_with_max([(Role, Count)|_], Max, Role) :-
+    Count =:= Max.
+first_role_with_max([_|Rest], Max, Role) :-
+    first_role_with_max(Rest, Max, Role).
+
 %-------------------------------------------------
 
 
