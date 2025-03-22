@@ -67,8 +67,14 @@ matches_of_team(Team,L):-
 %Task 5
 % a predicate to count all matches a team has played
 num_matches_of_team(Team, N) :-
-    findall(Match, (match(Team, _, _, _) ; match(_, Team, _, _)), Matches),
-    length(Matches, N).
+    count_matches(Team, [], 0, N).
+
+count_matches(Team, Seen, C, N) :-
+    (match(Team, Opp, S1, S2) ; match(Opp, Team, S1, S2)),
+    \+ member(match(Team, Opp, S1, S2), Seen),
+    NewC is C + 1,
+    count_matches(Team, [match(Team, Opp, S1, S2) | Seen], NewC, N).
+count_matches(_, _, N, N).
 %-------------------------------------------------
 %Task 6
 % a predicate to give the highest-scoring player
